@@ -227,6 +227,7 @@ class _BookingsState extends State<Bookings> {
             Column(
               children: [
                 Text(
+
                   duration,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
