@@ -1,9 +1,11 @@
+import 'package:flightbooking/features/Home/settingScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../Bookings/bookings.dart';
 
 class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
+
+
 
   @override
   State<Homescreen> createState() => _HomescreenState();
@@ -52,7 +54,7 @@ class _HomescreenState extends State<Homescreen> {
                     image: AssetImage('assets/yy.png'),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   left: 10,
                   child: Text(
                     "Let's start your trip",
@@ -90,22 +92,48 @@ class _HomescreenState extends State<Homescreen> {
             _buildSearchForm(),
 
             /// Search Button
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade800,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                onPressed: () {
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade800,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    onPressed: () {
 
-                  _onSearchPressed();
-                },
-                child: const Text(
-                  "Search Flights",
-                  style: TextStyle(color: Colors.white),
+                      _onSearchPressed();
+                    },
+                    child: const Text(
+                      "Search Flights",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade800,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    onPressed: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SettingScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Setting",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
             // Travel Inspirations
             _sectionHeader("Travel Inspirations", "Dubai"),
