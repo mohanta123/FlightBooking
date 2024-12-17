@@ -201,7 +201,6 @@ class _HomescreenState extends State<Homescreen> {
                 ),
               ),
               const SizedBox(width: 10),
-
               Flexible(
                 child: Container(
                   height: 50,
@@ -227,10 +226,6 @@ class _HomescreenState extends State<Homescreen> {
                   ),
                 ),
               ),
-
-
-
-
             ],
           ),
         ],
@@ -436,8 +431,8 @@ class _HomescreenState extends State<Homescreen> {
         child: AbsorbPointer(
           child: TextField(
             controller:
-                _controller, // Use a TextEditingController to manage the input
-            readOnly: true, // To make it non-editable
+                _controller,
+            readOnly: true,
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: Colors.green.shade800),
               hintText: isDeparture
@@ -452,8 +447,8 @@ class _HomescreenState extends State<Homescreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(
-                  color: Colors.green.shade800, // Optional: Border color
-                  width: 1, // Optional: Border width
+                  color: Colors.green.shade800,
+                  width: 1,
                 ),
               ),
             ),
@@ -496,7 +491,6 @@ class _HomescreenState extends State<Homescreen> {
       return;
     }
 
-    // Proceed with navigation to Bookings if validation passes
     Navigator.push(context, MaterialPageRoute(builder: (context) => Bookings()));
   }
 

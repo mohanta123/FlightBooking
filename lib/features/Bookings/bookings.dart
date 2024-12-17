@@ -42,7 +42,7 @@ class _BookingsState extends State<Bookings> {
     },
   ];
 
-  int selectedSlot = 0; // Index of the selected time slot
+  int selectedSlot = 0;
 
   @override
   Widget build(BuildContext context) {
