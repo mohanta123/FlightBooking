@@ -52,9 +52,9 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   child: Card(
-                    color: Colors.transparent, // To keep the color consistent
+                    color: Colors.transparent,
                     elevation:
-                        0, // Remove default card elevation since we're using a custom shadow
+                        0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -69,20 +69,20 @@ class _ProfileState extends State<Profile> {
                               CircleAvatar(
                                 radius: 30,
                                 backgroundImage:
-                                    AssetImage('assets/client.png'),
+                                    AssetImage('assets/dubai1.jpg'),
                               ),
                               SizedBox(width: 16),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Rakesh Das',
+                                    'Padmalochana Mohanta',
                                     style: TextFont.bold_TextStyle.copyWith(
                                       fontSize: 17,
                                     ),
                                   ),
                                   Text(
-                                    '+1 234 567 8901', // Replace with the actual phone number
+                                    '+91 1234567890',
                                     style: TextFont.normal_TextStyle.copyWith(
                                       fontSize: 12,
                                     ),
@@ -123,9 +123,9 @@ class _ProfileState extends State<Profile> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  margin: EdgeInsets.all(0), // Remove card margin
+                  margin: EdgeInsets.all(0),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0), // Reduced padding
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -157,7 +157,7 @@ class _ProfileState extends State<Profile> {
                                 Icons.message,
                                 size: 20,
                                 color: Colors.green,
-                              ), // Adjusted icon size
+                              ),
                               onPressed: () {
                                 // Handle message action
                               },
@@ -197,9 +197,9 @@ class _ProfileState extends State<Profile> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  margin: EdgeInsets.all(0), // Remove card margin
+                  margin: EdgeInsets.all(0),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0), // Reduced padding
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -232,17 +232,16 @@ class _ProfileState extends State<Profile> {
                         ),
                         InkWell(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => SignInPage()),
-                            // );
+
                           },
                           child: Row(
                             children: [
                               IconButton(
                                 icon: Icon(Icons.power_settings_new,
                                     size: 20, color: Colors.green),
-                                onPressed: () {},
+                                onPressed: () {
+
+                                },
                               ),
                               Text(
                                 "Logout",

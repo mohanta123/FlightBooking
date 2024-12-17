@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TextFont {
   static TextStyle get normal_TextStyle =>
-      GoogleFonts.montserrat(); // Use Google Fonts or your preferred font
+      GoogleFonts.montserrat();
 
   static TextStyle normal_TextStyleWithColor(Color color) =>
       GoogleFonts.montserrat(color: color);

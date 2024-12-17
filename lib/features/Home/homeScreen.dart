@@ -10,6 +10,26 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  // Text controllers to manage the input
+  final TextEditingController _fromController = TextEditingController();
+  final TextEditingController _toController = TextEditingController();
+
+  @override
+  void dispose() {
+    _fromController.dispose();
+    _toController.dispose();
+    super.dispose();
+  }
+
+  // Swap function
+  void _swapLocations() {
+    setState(() {
+      final temp = _fromController.text;
+      _fromController.text = _toController.text;
+      _toController.text = temp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,27 +45,28 @@ class _HomescreenState extends State<Homescreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top Green Section
-            Container(
-              color: Colors.green.shade800,
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      "Let's start your trip",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+            Stack(
+              children: [
+                Container(
+                  child: const Image(
+                    image: AssetImage('assets/yy.png'),
                   ),
-                  Image.asset(
-                    'assets/download.jpg', // Replace with your image asset path
-                    height: 50,
-                    width: 50,
-                  )
-                ],
-              ),
+                ),
+                Positioned(
+                  left: 10,
+                  child: Text(
+                    "Let's start your trip",
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-            // Flight Option Tabs
+
+            /// Flight Option Tabs
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Container(
@@ -56,16 +77,19 @@ class _HomescreenState extends State<Homescreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _flightOptionButton("Round Trip", true),
-                    _flightOptionButton("One Way", false),
-                    _flightOptionButton("Multi-City", false),
+                    _flightOptionButton("Round Trip", 0, _selectedIndex),
+                    _flightOptionButton("One Way", 1, _selectedIndex),
+                    _flightOptionButton("Multi-City", 2, _selectedIndex),
                   ],
                 ),
               ),
             ),
-            // Flight Search Form
+
+            /// Flight Search Form
+            _buildSearchFlight(),
             _buildSearchForm(),
-            // Search Button
+
+            /// Search Button
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
@@ -74,7 +98,8 @@ class _HomescreenState extends State<Homescreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Bookings()));
+
+                  _onSearchPressed();
                 },
                 child: const Text(
                   "Search Flights",
@@ -85,7 +110,7 @@ class _HomescreenState extends State<Homescreen> {
             // Travel Inspirations
             _sectionHeader("Travel Inspirations", "Dubai"),
             _travelInspirationSection(),
-            // Flight and Hotel Packages
+            /// Flight and Hotel Packages
             _sectionHeader("Flight & Hotel Packages", ""),
             _buildPromotionalBanner(),
           ],
@@ -94,67 +119,199 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  // Flight Options Toggle Buttons
-  Widget _flightOptionButton(String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.green.shade800 : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.black,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
+  DateTime? selectedDate;
+  DateTime? departureDate;
+  DateTime? returnDate;
+
+  int _selectedIndex = 1;
+
+  void _onOptionSelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
-  // Search Form Widgets
-  Widget _buildSearchForm() {
-    return Column(
-      children: [
-        _formField(Icons.flight_takeoff, "From"),
-        _formField(Icons.flight_land, "To"),
-        Row(
-          children: [
-            Expanded(
-              child: _formField(Icons.date_range, "Sat, 23 Mar - 2024"),
-            ),
-            Expanded(
-              child: _formField(Icons.people, "1 Passenger"),
-            ),
-          ],
+  /// Flight Options Toggle Buttons
+  Widget _flightOptionButton(String label, int index, int selectedIndex) {
+    return GestureDetector(
+      onTap: () => _onOptionSelected(index), // Handle selection
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: selectedIndex == index
+              ? Colors.green.shade800
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
         ),
-        _formField(Icons.airline_seat_recline_normal, "Economy Class"),
-      ],
-    );
-  }
-
-  Widget _formField(IconData icon, String hintText) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
-      child: SizedBox(
-        height: 40,
-        child: TextField(
-          decoration: InputDecoration(
-            prefixIcon: Icon(icon, color: Colors.green.shade800),
-            hintText: hintText,
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
-            ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selectedIndex == index ? Colors.white : Colors.black,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
     );
   }
 
-  // Section Header
+  /// Search Form Widgets
+  Widget _buildSearchForm() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _formFieldWithCalendar(
+                    Icons.date_range, "Select Departure",
+                    isDeparture: true),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _formFieldWithCalendar(Icons.date_range, "Select Return",
+                    isDeparture: false),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 50,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon:
+                          Icon(Icons.people, color: Colors.green.shade800),
+                      hintText: "Travelers",
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.green.shade800,
+                          width: 1, // Set the border width
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+
+              Flexible(
+                child: Container(
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green.shade800, width: 1),
+                    borderRadius: BorderRadius.circular(10), // Rounded corners
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      border: InputBorder.none, // Removes the underline
+                    ),
+                    items: <String>['Economy', 'Premium Economy', 'Business', 'First Class']
+                        .map((String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    ))
+                        .toList(),
+                    onChanged: (String? newValue) {
+                      // Handle dropdown value change
+                    },
+                    hint: Text("Cabin Class"),
+                  ),
+                ),
+              ),
+
+
+
+
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchFlight() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                // From Field
+                SizedBox(
+                  height: 50,
+                  child: TextField(
+                    controller: _fromController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.flight_takeoff,
+                          color: Colors.green.shade800),
+                      hintText: "From",
+                      filled: true,
+                      fillColor: Colors.grey.shade300,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // To Field
+                SizedBox(
+                  height: 50,
+                  child: TextField(
+                    controller: _toController,
+                    decoration: InputDecoration(
+                      prefixIcon:
+                          Icon(Icons.flight_land, color: Colors.green.shade800),
+                      hintText: "To",
+                      filled: true,
+                      fillColor: Colors.grey.shade300,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Swap Button
+          Positioned(
+            top: 30,
+            right: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: Icon(Icons.swap_vert, color: Colors.green.shade800),
+                onPressed: _swapLocations,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Section Header
   Widget _sectionHeader(String title, String subtitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
@@ -175,7 +332,7 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  // Travel Inspirations Section
+  /// Travel Inspirations Section
   Widget _travelInspirationSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -225,7 +382,7 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  // Promotional Banner
+  /// Promotional Banner
   Widget _buildPromotionalBanner() {
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -252,4 +409,97 @@ class _HomescreenState extends State<Homescreen> {
       ),
     );
   }
+
+  Widget _formFieldWithCalendar(IconData icon, String hintText,
+      {required bool isDeparture}) {
+    return GestureDetector(
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now(),
+          lastDate: DateTime(2100),
+        );
+
+        if (pickedDate != null) {
+          setState(() {
+            if (isDeparture) {
+              departureDate = pickedDate;
+            } else {
+              returnDate = pickedDate;
+            }
+          });
+        }
+      },
+      child: Container(
+        height: 50,
+        child: AbsorbPointer(
+          child: TextField(
+            controller:
+                _controller, // Use a TextEditingController to manage the input
+            readOnly: true, // To make it non-editable
+            decoration: InputDecoration(
+              prefixIcon: Icon(icon, color: Colors.green.shade800),
+              hintText: isDeparture
+                  ? (departureDate != null
+                      ? "${departureDate!.day}/${departureDate!.month}/${departureDate!.year}"
+                      : hintText)
+                  : (returnDate != null
+                      ? "${returnDate!.day}/${returnDate!.month}/${returnDate!.year}"
+                      : hintText),
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.green.shade800, // Optional: Border color
+                  width: 1, // Optional: Border width
+                ),
+              ),
+            ),
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: isDeparture
+                    ? departureDate ?? DateTime.now()
+                    : returnDate ?? DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+              );
+              if (pickedDate != null) {
+                setState(() {
+                  if (isDeparture) {
+                    departureDate = pickedDate;
+                  } else {
+                    returnDate = pickedDate;
+                  }
+                  _controller.text =
+                      "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                });
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onSearchPressed() {
+    if (_fromController.text.isEmpty || _toController.text.isEmpty || departureDate == null) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in both "From" and "To" and "Departure" fields.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Proceed with navigation to Bookings if validation passes
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Bookings()));
+  }
+
+
+  final TextEditingController _controller = TextEditingController();
 }
