@@ -1,6 +1,8 @@
 import 'package:flightbooking/widgets/ButtonNavigation/buttonNavigation.dart';
 import 'package:flutter/material.dart';
 
+import 'features/Home/loginScreen.dart';
+
 
 
 void main() {
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home:ButtonNavigation(),
+      home:LoginScreen(),
     );
   }
 }

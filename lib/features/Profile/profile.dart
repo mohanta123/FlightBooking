@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../../core/Contants/fontStyle.dart';
+import '../Home/loginScreen.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -10,6 +10,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool _isAuthenticated = true; // Authentication state
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
@@ -53,8 +54,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   child: Card(
                     color: Colors.transparent,
-                    elevation:
-                        0,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -68,8 +68,7 @@ class _ProfileState extends State<Profile> {
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundImage:
-                                    AssetImage('assets/dubai1.jpg'),
+                                backgroundImage: AssetImage('assets/dubai1.jpg'),
                               ),
                               SizedBox(width: 16),
                               Column(
@@ -140,24 +139,18 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-                        //  Spacer(), // Adds flexible space
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.call,
-                                  size: 20, color: Colors.green),
+                              icon: Icon(Icons.call, size: 20, color: Colors.green),
                               onPressed: () {
                                 // Handle call action
                               },
                             ),
                             SizedBox(width: 16),
                             IconButton(
-                              icon: Icon(
-                                Icons.message,
-                                size: 20,
-                                color: Colors.green,
-                              ),
+                              icon: Icon(Icons.message, size: 20, color: Colors.green),
                               onPressed: () {
                                 // Handle message action
                               },
@@ -207,46 +200,69 @@ class _ProfileState extends State<Profile> {
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.privacy_tip,
-                                  size: 20, color: Colors.green),
+                              icon: Icon(Icons.privacy_tip, size: 20, color: Colors.green),
                               onPressed: () {
-                                // Handle call action
+                                // Handle privacy policy action
                               },
                             ),
                             Text("Privacy Policy",
                                 style: TextFont.normal_TextStyle.copyWith(
-                                    fontSize: 15, color: Colors.green)),
+                                  fontSize: 15,
+                                  color: Colors.green,
+                                )),
                           ],
                         ),
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.privacy_tip,
-                                  size: 20, color: Colors.green),
-                              onPressed: () {},
+                              icon: Icon(Icons.privacy_tip, size: 20, color: Colors.green),
+                              onPressed: () {
+                                // Handle terms and conditions action
+                              },
                             ),
                             Text("Terms and Conditions",
                                 style: TextFont.normal_TextStyle.copyWith(
-                                    fontSize: 15, color: Colors.green)),
+                                  fontSize: 15,
+                                  color: Colors.green,
+                                )),
                           ],
                         ),
                         InkWell(
                           onTap: () {
+                            setState(() {
+                              _isAuthenticated = false; // Set authentication state to false
+                            });
 
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => LoginScreen(),
+                              ),
+                                  (Route<dynamic> route) => false,
+                            );
                           },
                           child: Row(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.power_settings_new,
-                                    size: 20, color: Colors.green),
+                                icon: Icon(Icons.power_settings_new, size: 20, color: Colors.green),
                                 onPressed: () {
+                                  setState(() {
+                                    _isAuthenticated = false; // Set authentication state to false
+                                  });
 
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => LoginScreen(),
+                                    ),
+                                        (Route<dynamic> route) => false,
+                                  );
                                 },
                               ),
                               Text(
                                 "Logout",
                                 style: TextFont.normal_TextStyle.copyWith(
-                                    fontSize: 15, color: Colors.green),
+                                  fontSize: 15,
+                                  color: Colors.green,
+                                ),
                               ),
                             ],
                           ),

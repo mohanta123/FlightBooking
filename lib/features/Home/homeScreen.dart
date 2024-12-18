@@ -1,10 +1,10 @@
 import 'package:flightbooking/features/Home/settingScreen.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/ButtonNavigation/buttonNavigation.dart';
 import '../Bookings/bookings.dart';
 
 class Homescreen extends StatefulWidget {
-
 
 
   @override
@@ -126,6 +126,7 @@ class _HomescreenState extends State<Homescreen> {
                           builder: (context) => SettingScreen(),
                         ),
                       );
+
                     },
                     child: const Text(
                       "Setting",
