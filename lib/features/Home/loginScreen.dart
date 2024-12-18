@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../widgets/ButtonNavigation/buttonNavigation.dart';
 
@@ -72,13 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>ButtonNavigation(),
-                    ),
-                  );
-
+                  Get.offAll(()=>BottonNavBar());
                 },
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(), backgroundColor: Colors.tealAccent,

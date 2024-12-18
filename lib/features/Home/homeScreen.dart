@@ -1,12 +1,12 @@
 import 'package:flightbooking/features/Home/settingScreen.dart';
+import 'package:flightbooking/widgets/ButtonNavigation/bottom_nav_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../widgets/ButtonNavigation/buttonNavigation.dart';
 import '../Bookings/bookings.dart';
 
 class Homescreen extends StatefulWidget {
-
-
   @override
   State<Homescreen> createState() => _HomescreenState();
 }
@@ -38,6 +38,7 @@ class _HomescreenState extends State<Homescreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.green.shade800,
+        automaticallyImplyLeading: false,
         title: const Text(
           "Search Flights",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -102,7 +103,6 @@ class _HomescreenState extends State<Homescreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {
-
                       _onSearchPressed();
                     },
                     child: const Text(
@@ -119,14 +119,7 @@ class _HomescreenState extends State<Homescreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SettingScreen(),
-                        ),
-                      );
-
+                      Get.find<BottomNavController>().onButtonTap(1);
                     },
                     child: const Text(
                       "Setting",
@@ -139,6 +132,7 @@ class _HomescreenState extends State<Homescreen> {
             // Travel Inspirations
             _sectionHeader("Travel Inspirations", "Dubai"),
             _travelInspirationSection(),
+
             /// Flight and Hotel Packages
             _sectionHeader("Flight & Hotel Packages", ""),
             _buildPromotionalBanner(),
@@ -242,11 +236,16 @@ class _HomescreenState extends State<Homescreen> {
                     decoration: InputDecoration(
                       border: InputBorder.none, // Removes the underline
                     ),
-                    items: <String>['Economy', 'Premium Economy', 'Business', 'First Class']
+                    items: <String>[
+                      'Economy',
+                      'Premium Economy',
+                      'Business',
+                      'First Class'
+                    ]
                         .map((String value) => DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    ))
+                              value: value,
+                              child: Text(value),
+                            ))
                         .toList(),
                     onChanged: (String? newValue) {
                       // Handle dropdown value change
@@ -459,8 +458,7 @@ class _HomescreenState extends State<Homescreen> {
         height: 50,
         child: AbsorbPointer(
           child: TextField(
-            controller:
-                _controller,
+            controller: _controller,
             readOnly: true,
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: Colors.green.shade800),
@@ -509,20 +507,22 @@ class _HomescreenState extends State<Homescreen> {
   }
 
   void _onSearchPressed() {
-    if (_fromController.text.isEmpty || _toController.text.isEmpty || departureDate == null) {
-
+    if (_fromController.text.isEmpty ||
+        _toController.text.isEmpty ||
+        departureDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please fill in both "From" and "To" and "Departure" fields.'),
+          content: Text(
+              'Please fill in both "From" and "To" and "Departure" fields.'),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
-
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Bookings()));
+    Get.find<BottomNavController>().isSearch = true;
+    Get.find<BottomNavController>().onInit();
+    Get.find<BottomNavController>().update();
   }
-
 
   final TextEditingController _controller = TextEditingController();
 }

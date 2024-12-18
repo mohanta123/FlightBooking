@@ -1,92 +1,50 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flightbooking/features/Home/homeScreen.dart';
 import 'package:flutter/material.dart';
-import '../../features/Home/homeScreen.dart';
-import '../../features/Home/settingScreen.dart';
-import '../../features/Profile/profile.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
-class ButtonNavigation extends StatefulWidget {
-  final int initialPage;
+import 'bottom_nav_controller.dart';
 
-  const ButtonNavigation({Key? key, this.initialPage = 0}) : super(key: key);
-
-  @override
-  State<ButtonNavigation> createState() => _ButtonNavigationState();
-}
-
-class _ButtonNavigationState extends State<ButtonNavigation> {
-  late int _page; // Variable to track the selected tab
-  bool _isAuthenticated = true; // Initialize _isAuthenticated with true
-
-  // Create Navigator keys for each tab
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-  ];
-
-  final List<Widget> pages = [
-    Homescreen(),
-    SettingScreen(),
-    Profile(),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _page = widget.initialPage; // Initialize with the provided initialPage
-  }
-
-  void _selectPage(int index) {
-    setState(() {
-      _navigatorKeys[_page].currentState?.popUntil((route) => route.isFirst);
-      _page = index;
-    });
-  }
-
-  // Function to update authentication state
-  void _updateAuthState(bool isAuthenticated) {
-    setState(() {
-      _isAuthenticated = isAuthenticated;
-    });
-  }
+class BottonNavBar extends StatelessWidget {
+  const BottonNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (!_isAuthenticated) {
-      // If user is not authenticated, return a widget that doesn't show the tab bar
-      return Scaffold(
-        body: pages[_page], // Show only the page without the tab bar
-      );
-    }
-
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        backgroundColor: Colors.green,
-        activeColor: Colors.white,
-        inactiveColor: Colors.grey.shade600,
-        currentIndex: _page,
-        onTap: (index) => _selectPage(index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-      tabBuilder: (BuildContext context, int index) {
-        return CupertinoTabView(
-          navigatorKey: _navigatorKeys[index],
-          builder: (context) => pages[index],
-        );
-      },
-    );
+    return GetBuilder<BottomNavController>(
+        init: BottomNavController(),
+        builder: (controller) {
+          return Scaffold(
+            body: controller.selectScreen,
+            bottomNavigationBar: GNav(
+                haptic: true,
+                tabBorderRadius: 15,
+                selectedIndex: controller.selectScreenIndex ?? 0,
+                curve: Curves.easeOutExpo,
+                onTabChange: (t) => controller.onButtonTap(t),
+                duration: const Duration(milliseconds: 50),
+                gap: 8,
+                color: Colors.grey[800],
+                activeColor: Colors.purple,
+                iconSize: 24, // tab button icon size
+                tabBackgroundColor: Colors.purple.withOpacity(0.1),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 5), // navigation bar padding
+                tabs: const [
+                  GButton(
+                    icon: Icons.home,
+                    text: 'Home',
+                  ),
+                  GButton(
+                    icon: Icons.settings,
+                    text: 'Likes',
+                  ),
+                  GButton(
+                    icon: Icons.person,
+                    text: 'Search',
+                  ),
+                ]).paddingOnly(bottom: 20, left: 40, right: 40, top: 10),
+          );
+        });
   }
 }

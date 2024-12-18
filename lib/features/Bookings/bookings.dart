@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../widgets/ButtonNavigation/bottom_nav_controller.dart';
 
 class Bookings extends StatefulWidget {
   const Bookings({super.key});
@@ -46,94 +49,117 @@ class _BookingsState extends State<Bookings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text("Ezy Travel"),
-        backgroundColor: Colors.green.shade400,
-      ),
-      body: Column(
-        children: [
-          // Search Bar and Filter Section
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "BLR - Bengaluru to DXB - Dubai",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Departure: Sat, 23 Mar | Return: Sat, 23 Mar\nRound Trip | Ready, Steady",
-                  style:
-                  TextStyle(color: Colors.grey.shade700, fontSize: 12),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _customButton("Sort", Icons.sort),
-                    _customButton("Non - Stop", Icons.flight_takeoff),
-                    _customButton("Filter", Icons.filter_alt),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                // Time Slots Row
-                SizedBox(
-                  height: 40,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: timeSlots.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedSlot = index;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: selectedSlot == index
-                                ? Colors.green.shade400
-                                : Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text(
-                              timeSlots[index],
-                              style: TextStyle(
-                                  color: selectedSlot == index
-                                      ? Colors.white
-                                      : Colors.black),
+    return PopScope(
+      onPopInvoked:(t){
+        Get.find<BottomNavController>().isSearch = false;
+        Get.find<BottomNavController>().onInit();
+        Get.find<BottomNavController>().update();
+      } ,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Expanded(
+                  child: InkWell(
+                onTap: () {
+                  Get.find<BottomNavController>().isSearch = false;
+                  Get.find<BottomNavController>().onInit();
+                  Get.find<BottomNavController>().update();
+                },
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Icon(Icons.arrow_back_ios)),
+              )),
+              const Text("Ezy Travel"),
+              Spacer()
+            ],
+          ),
+          backgroundColor: Colors.green.shade400,
+          automaticallyImplyLeading: false,
+        ),
+        body: Column(
+          children: [
+            // Search Bar and Filter Section
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "BLR - Bengaluru to DXB - Dubai",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "Departure: Sat, 23 Mar | Return: Sat, 23 Mar\nRound Trip | Ready, Steady",
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _customButton("Sort", Icons.sort),
+                      _customButton("Non - Stop", Icons.flight_takeoff),
+                      _customButton("Filter", Icons.filter_alt),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Time Slots Row
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: timeSlots.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedSlot = index;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: selectedSlot == index
+                                  ? Colors.green.shade400
+                                  : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                timeSlots[index],
+                                style: TextStyle(
+                                    color: selectedSlot == index
+                                        ? Colors.white
+                                        : Colors.black),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 5),
-          // Flight Listings
-          Expanded(
-            child: ListView.builder(
-              itemCount: flights.length,
-              itemBuilder: (context, index) {
-                final flight = flights[index];
-                return _flightCard(flight);
-              },
+            const SizedBox(height: 5),
+            // Flight Listings
+            Expanded(
+              child: ListView.builder(
+                itemCount: flights.length,
+                itemBuilder: (context, index) {
+                  final flight = flights[index];
+                  return _flightCard(flight);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -174,11 +200,19 @@ class _BookingsState extends State<Bookings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _flightInfoRow("Onward - Garuda Indonesia", flight['onwardTime'],
-              flight['onwardDuration'], flight['onwardArrival'], flight['onwardRoute']),
+          _flightInfoRow(
+              "Onward - Garuda Indonesia",
+              flight['onwardTime'],
+              flight['onwardDuration'],
+              flight['onwardArrival'],
+              flight['onwardRoute']),
           Divider(color: Colors.grey.shade300),
-          _flightInfoRow("Return - Garuda Indonesia", flight['returnTime'],
-              flight['returnDuration'], flight['returnArrival'], flight['returnRoute']),
+          _flightInfoRow(
+              "Return - Garuda Indonesia",
+              flight['returnTime'],
+              flight['returnDuration'],
+              flight['returnArrival'],
+              flight['returnRoute']),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,13 +255,11 @@ class _BookingsState extends State<Bookings> {
           children: [
             Text(
               time,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             Column(
               children: [
                 Text(
-
                   duration,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
@@ -241,8 +273,7 @@ class _BookingsState extends State<Bookings> {
             ),
             Text(
               arrival,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
