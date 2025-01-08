@@ -18,6 +18,7 @@ class BottonNavBar extends StatelessWidget {
             body: controller.selectScreen,
             bottomNavigationBar: GNav(
                 haptic: true,
+                backgroundColor: Colors.pinkAccent,
                 tabBorderRadius: 15,
                 selectedIndex: controller.selectScreenIndex ?? 0,
                 curve: Curves.easeOutExpo,
@@ -28,8 +29,7 @@ class BottonNavBar extends StatelessWidget {
                 activeColor: Colors.purple,
                 iconSize: 24, // tab button icon size
                 tabBackgroundColor: Colors.purple.withOpacity(0.1),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 5), // navigation bar padding
+                 // navigation bar padding
                 tabs: const [
                   GButton(
                     icon: Icons.home,
@@ -43,7 +43,7 @@ class BottonNavBar extends StatelessWidget {
                     icon: Icons.person,
                     text: 'Search',
                   ),
-                ]).paddingOnly(bottom: 20, left: 40, right: 40, top: 10),
+                ])
           );
         });
   }
